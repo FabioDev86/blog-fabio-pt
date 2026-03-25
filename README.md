@@ -51,7 +51,7 @@ KV_REST_API_TOKEN=...
 KV_REST_API_READ_ONLY_TOKEN=...
 
 # Security
-AGENT_SHARED_SECRET=your_high_entropy_secret_here
+AGENT_SECRET_KEY=your_high_entropy_secret_here
 ```
 
 ### 3. Installation
