@@ -11,9 +11,14 @@ export default async function HomePage() {
     const keys = slugs.map((slug: string) => `post:${slug}`);
     const posts = await kv.mget(...keys);
     
-    publishedPosts = posts.filter(
-      (post: any) => post && post.status === 'published'
-    );
+    // Filter and sort chronologically (newest first)
+    publishedPosts = posts
+      .filter((post: any) => post && post.status === 'published')
+      .sort((a: any, b: any) => {
+        const dateA = new Date(a.metadata?.generatedAt || 0).getTime();
+        const dateB = new Date(b.metadata?.generatedAt || 0).getTime();
+        return dateB - dateA;
+      });
   }
 
   return (
@@ -45,11 +50,15 @@ export default async function HomePage() {
             >
               <div className="space-y-6">
                 <div className="flex flex-wrap gap-3">
-                  {post.tags?.slice(0, 3).map((tag: string) => (
-                    <span key={tag} className="px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[0.65rem] font-black uppercase tracking-widest rounded-md">
-                      #{tag}
-                    </span>
-                  ))}
+                  {post.tags?.slice(0, 3).map((tag: string) => {
+                    // Prevent double ## rendering if Agent already provides the hash
+                    const cleanTag = tag.startsWith('#') ? tag : `#${tag}`;
+                    return (
+                      <span key={tag} className="px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[0.65rem] font-black uppercase tracking-widest rounded-md">
+                        {cleanTag}
+                      </span>
+                    );
+                  })}
                 </div>
                 
                 <div className="space-y-4">
@@ -63,13 +72,20 @@ export default async function HomePage() {
               </div>
               
               <div className="flex items-center gap-4 pt-8 border-t border-white/[0.05] mt-10">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center border-2 border-emerald-500/30 shadow-inner">
+                <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center border-2 border-emerald-500/30 shadow-inner flex-shrink-0">
                   <span className="text-xs font-black text-emerald-400 tracking-tighter uppercase">AI</span>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-grow">
                   <span className="text-sm font-black text-white uppercase tracking-wide">{post.author || "ZERO CLAW"}</span>
                   <span className="text-[10px] text-emerald-500 font-bold tracking-widest uppercase mt-0.5">Agent Author</span>
                 </div>
+                {post.metadata?.generatedAt && (
+                  <div className="text-right flex-shrink-0">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 block">
+                      {new Date(post.metadata.generatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                  </div>
+                )}
               </div>
             </Link>
           ))}
