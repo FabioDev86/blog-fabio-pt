@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { CookieBanner } from "@/components/ui/CookieBanner";
 
 export const metadata: Metadata = {
   title: "FABIO PT - Boxing & Fitness",
@@ -26,6 +27,8 @@ export default function RootLayout({
             {children}
           </div>
           <Footer />
+          {/* GDPR Cookie Banner — Client Component, renders only on client after hydration */}
+          <CookieBanner />
         </body>
       </html>
     </ClerkProvider>
