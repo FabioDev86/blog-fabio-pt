@@ -22,6 +22,12 @@ export function Navbar() {
             Blog
           </Link>
           <Link 
+            href="/about" 
+            className="text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-emerald-400 transition-colors"
+          >
+            About
+          </Link>
+          <Link 
             href="/admin/queue" 
             className="text-xs font-black uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-5 py-2.5 rounded-full border border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all focus:ring-2 focus:ring-emerald-500 focus:outline-none shadow-sm"
           >
