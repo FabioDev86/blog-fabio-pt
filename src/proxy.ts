@@ -17,7 +17,7 @@ const agentRateLimit = new Ratelimit({
 });
 
 // Route Matchers
-const isAdminRoute = createRouteMatcher(['/admin(.*)']);
+const isAdminRoute = createRouteMatcher(['/admin(.*)', '/editor(.*)']);
 const isAgentApiRoute = createRouteMatcher(['/api/agent(.*)']);
 
 // HMAC Verification Helper (Edge-compatible Web Crypto API)
@@ -50,7 +50,7 @@ async function verifyHmac(req: NextRequest, secret: string) {
 }
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
-  // 1. Protect /admin routes using Clerk RBAC
+  // 1. Protect /admin and /editor routes using Clerk RBAC
   if (isAdminRoute(req)) {
     const session = await auth();
     
@@ -63,7 +63,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     
     // Check if user has the 'admin' metadata role
     if (session.sessionClaims?.metadata?.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', req.url));
+      return NextResponse.redirect(new URL('/unauthorized', req.url));
     }
   }
 
