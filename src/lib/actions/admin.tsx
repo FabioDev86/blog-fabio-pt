@@ -25,7 +25,7 @@ export async function approvePost(slug: string) {
   await kv.set(postKey, post);
 
   // 4. Revalidate edge cache and admin route
-  revalidateTag('blog');
+  revalidateTag('blog', 'collection');
   revalidatePath('/admin/queue');
 
   return { success: true, slug };
@@ -46,7 +46,7 @@ export async function deletePost(slug: string) {
   await kv.srem('posts:index', slug);
   
   // Revalidate edge cache and admin route
-  revalidateTag('blog');
+  revalidateTag('blog', 'collection');
   revalidatePath('/admin/queue');
   
   return { success: true, slug };
@@ -92,7 +92,7 @@ export async function updatePost(slug: string, newData: { title: string, mdxCont
   await kv.set(postKey, post);
   
   // Hard purge of any stale cache for this route
-  revalidateTag('blog');
+  revalidateTag('blog', 'collection');
   revalidatePath(`/blog/${slug}`);
   revalidatePath('/admin/queue');
   

@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     // Triggers Next.js 15 Data Cache revalidation for the 'blog' tag
     // This ensures Edge Nodes serve the fresh content immediately 
     // without rebuilding the entire site
-    revalidateTag('blog');
+    revalidateTag('blog', 'collection');
 
     return NextResponse.json(
       { success: true, slug: payload.slug, message: 'Article ingested and cache revalidated' },
