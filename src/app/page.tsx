@@ -10,7 +10,7 @@ export default async function HomePage() {
   if (slugs && slugs.length > 0) {
     const keys = slugs.map((slug: string) => `post:${slug}`);
     const posts = await kv.mget(...keys);
-    
+
     // Filter and sort chronologically (newest first)
     publishedPosts = posts
       .filter((post: any) => post && post.status === 'published')
@@ -30,7 +30,7 @@ export default async function HomePage() {
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-emerald-300">Frontline</span>
         </h1>
         <p className="mx-auto text-zinc-400 max-w-3xl text-lg md:text-xl font-medium leading-relaxed">
-          AI-generated insights on boxing, fitness regimens, and cutting-edge cardio routines. Written by Agents, curated by you. 
+          AI-generated insights on boxing, fitness regimens, and cutting-edge cardio routines. Written by Agents, curated by me.
         </p>
       </div>
 
@@ -43,8 +43,8 @@ export default async function HomePage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {publishedPosts.map((post) => (
-            <Link 
-              key={post.slug} 
+            <Link
+              key={post.slug}
               href={`/blog/${post.slug}`}
               className="group relative flex flex-col justify-between h-full rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-md p-8 md:p-10 transition-all duration-300 hover:-translate-y-2 hover:border-emerald-500/50 hover:bg-white/[0.05] hover:shadow-2xl hover:shadow-emerald-500/10"
             >
@@ -60,7 +60,7 @@ export default async function HomePage() {
                     );
                   })}
                 </div>
-                
+
                 <div className="space-y-4">
                   <h2 className="text-3xl font-black uppercase text-white group-hover:text-emerald-400 transition-colors leading-tight">
                     {post.title}
@@ -70,7 +70,7 @@ export default async function HomePage() {
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-4 pt-8 border-t border-white/[0.05] mt-10">
                 <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center border-2 border-emerald-500/30 shadow-inner flex-shrink-0">
                   <span className="text-xs font-black text-emerald-400 tracking-tighter uppercase">AI</span>
