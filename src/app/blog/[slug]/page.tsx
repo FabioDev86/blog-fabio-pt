@@ -3,13 +3,7 @@ import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
 
-import { WorkoutCard } from '@/components/mdx/WorkoutCard';
-import { ScienceBadge } from '@/components/mdx/ScienceBadge';
-
-const components = {
-  WorkoutCard,
-  ScienceBadge,
-};
+import { components } from '@/components/mdx';
 
 export const revalidate = 60;
 

@@ -1,107 +1,127 @@
-import crypto from 'node:crypto';
+import * as crypto from 'crypto';
 
-// The AI Agent Payload matching the supposed AgentPayloadSchema
-const payload = {
-  id: crypto.randomUUID(),
-  slug: "ultimate-boxing-cardio-routine",
-  title: "The Ultimate Boxing Cardio Routine for Maximum Fat Burn",
-  excerpt: "A 30-minute high-intensity boxing cardio routine designed to maximize fat burn and improve cardiovascular health.",
-  status: "pending_review",
-  author: "AGENTIC_AI",
-  tags: ["Fitness", "Boxing", "Cardio", "Health"],
-  mdxContent: `
-# The Science of Boxercise
-
-Boxing isn't just about punching bags; it's a full-body cardiovascular workout.
-
-<ScienceBadge title="Metabolic Burn">
-Studies show that an hour of intense boxing can burn up to 800-1000 calories, depending on intensity and weight.
-</ScienceBadge>
-
-Try this routine at home:
-
-<WorkoutCard 
-  title="30-Minute Heavy Bag Drill" 
-  duration="30 min" 
-  difficulty="Intermediate" 
-  exercises={[
-    "3 min warm-up jump rope", 
-    "3 min jab-cross combos", 
-    "3 min power hooks and uppercuts"
-  ]}
-/>
-
-Remember to stay hydrated!
-  `.trim(),
-  seo: {
-    metaTitle: "Ultimate Boxing Cardio Routine | Burn Fat Fast",
-    metaDescription: "Learn how to burn 1000 calories with basic boxing combos. Complete 30-minute heavy bag drill included.",
-    keywords: ["boxing", "cardio", "fat burn", "workout", "fitness"]
-  }
-};
-
-// Convert payload to string for signing and transmission
-const payloadString = JSON.stringify(payload);
-
-/**
- * 1. Security (HMAC)
- * Load the secret from the environment variables.
- * Note: middleware.ts uses AGENT_SHARED_SECRET, so we check for both.
- */
-const secret = process.env.AGENT_SECRET_KEY || process.env.AGENT_SHARED_SECRET;
-
-if (!secret) {
-  console.error("❌ ERROR: AGENT_SHARED_SECRET or AGENT_SECRET_KEY is missing.");
-  console.error("Please run the script providing the env var, e.g.:");
-  console.error("AGENT_SHARED_SECRET=your_secret_here bun scripts/test-hmac.ts");
+const SECRET = process.env.AGENT_SECRET_KEY;
+if (!SECRET) {
+  console.error("❌ ERRORE: AGENT_SECRET_KEY non trovata nel .env.local");
   process.exit(1);
 }
 
-// Generate the SHA-256 HMAC signature
+// Payload Zod Compliant per il Cognitive Boxing Post
+const payload = {
+  id: crypto.randomUUID(),
+  slug: "neurobiology-peak-performance-boxing",
+  title: "The Neurobiology of Peak Performance: Boxing & Cognitive Load",
+  excerpt: "Discover how high-intensity cognitive boxing drills physically rewire the brain, improving neuroplasticity and reaction times under extreme cognitive load.",
+  author: "AGENTIC_AI",
+  status: "pending_review",
+  content: "This field is deprecated in favor of mdxContent, but sent for legacy.",
+  mdxContent: `
+Boxing isn't just a physical chess match; it's a profound stimulus for the brain's structural adaptation. When an athlete responds to randomized combinations, the brain is forced into rapid information processing, fostering neurogenesis.
+
+<ScienceBadge 
+  evidence_level="High" 
+  title="Neuroplasticity in Strike Coordination" 
+  doi_link="https://doi.org/10.1016/j.bandc.2018.02.004" 
+  abstract="High-intensity interval striking requires continuous multi-limb coordination, directly increasing cerebral blood flow and promoting brain-derived neurotrophic factor (BDNF) synthesis."
+>
+  (Neuroplasticity Study)
+</ScienceBadge>
+
+The unpredictability of a sparring session or a reactive pad-work drill imposes massive cognitive load. This forces the brain to optimize its synaptic pathways for faster retrieval of complex motor patterns.
+
+<ScienceBadge 
+  evidence_level="Moderate" 
+  title="Cognitive Load and Reactive Decision Making" 
+  abstract="Studies demonstrate that athletes engaging in anticipatory dynamic environments show thickened cortex areas compared to control groups, indicating functional neurological enhancements."
+>
+  (Decision Making Research)
+</ScienceBadge>
+
+### The Cognitive Boxing Routine
+
+For those who have already mastered the fundamentals in our [Ultimate Boxing Cardio Routine](/blog/ultimate-boxing-cardio-routine), you're ready to integrate cognitive stressors. These drills require a partner or a reactive light system.
+
+<WorkoutCard
+  title="Neurological Pad-Work Integrator"
+  duration="25 mins"
+  difficulty="Advanced"
+  exercises={[
+    { name: "Visual Stimulus: Jab-Cross on Red, Hook on Blue", sets: "3", reps: "3:00", rpe: "7", rest: "60s" },
+    { name: "Numbered Complex: 1=Jab, 2=Cross, 3=Hook, 4=Uppercut", sets: "4", reps: "2:00", rpe: "8", rest: "60s" },
+    { name: "Math Reactivity: Coach calls math. Even=Defend, Odd=Counter", sets: "2", reps: "2:00", rpe: "9", rest: "90s" }
+  ]}
+/>
+
+To secure long-term neurological adaptations, consistency is key. The intense focus demanded by these routines has measurable hormonal impacts.
+
+<ScienceBadge 
+  evidence_level="High" 
+  title="BDNF and Motor Learning"
+  abstract="Structured motor-skill acquisition in martial arts correlates with a 30% sustained elevation in BDNF levels post-workout, accelerating synaptic plasticity during recovery."
+>
+  (Motor Learning Analysis)
+</ScienceBadge>
+
+Start slow. The brain needs time to adapt just as much as your muscles do.
+  `,
+  workouts: [
+    {
+      title: "Neurological Pad-Work Integrator",
+      duration: "25 mins",
+      difficulty: "Advanced",
+      exercises: [
+        { name: "Visual Stimulus: Jab-Cross on Red, Hook on Blue", sets: "3", reps: "3:00", rpe: "7", rest: "60s" },
+        { name: "Numbered Complex: 1=Jab, 2=Cross, 3=Hook, 4=Uppercut", sets: "4", reps: "2:00", rpe: "8", rest: "60s" },
+        { name: "Math Reactivity: Coach calls math. Even=Defend, Odd=Counter", sets: "2", reps: "2:00", rpe: "9", rest: "90s" }
+      ]
+    }
+  ],
+  tags: ["#Neurology", "#CognitiveLoad", "#PeakPerformance", "#Boxing"],
+  seo: {
+    metaDescription: "High-intensity cognitive boxing drills.",
+    keywords: ["Neuroplasticity", "Boxing", "Cognitive Load", "BDNF"]
+  },
+  metadata: {
+    agentId: "ZERO_CLAW_V2",
+    version: "1.2.0",
+    generatedAt: new Date().toISOString()
+  }
+};
+
+const bodyString = JSON.stringify(payload);
+
+// Calcola la firma HMAC SHA-256
 const signature = crypto
-  .createHmac('sha256', secret)
-  .update(payloadString)
-  .digest('hex');
+  .createHmac("sha256", SECRET)
+  .update(bodyString)
+  .digest("hex");
 
-const signatureHeader = `sha256=${signature}`;
+console.log(`🔐 Generated Signature: ${signature}`);
+console.log(`📡 Sending payload (Size: ${bodyString.length} bytes)...`);
 
-console.log('🔄 Simulating AI Agent "Zero Claw" Post Ingestion...\n');
-console.log('📦 Payload Summary:', JSON.stringify({ slug: payload.slug, title: payload.title, status: payload.status }, null, 2));
-console.log('🔑 Generated Signature:', signatureHeader, '\n');
-
-/**
- * 2. Execution Logic
- * Send the POST request to the local API endpoint
- */
-async function sendToAgentIngest() {
-  const url = 'http://localhost:3000/api/agent/ingest';
-  
+async function sendTest() {
   try {
-    console.log(`🚀 Sending POST request to ${url}...`);
-    const response = await fetch(url, {
-      method: 'POST',
+    const res = await fetch("http://localhost:3001/api/agent/ingest", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'x-hub-signature-256': signatureHeader
+        "Content-Type": "application/json",
+        "x-hub-signature-256": signature,
       },
-      body: payloadString
+      body: bodyString,
     });
 
-    console.log(`\n🌐 Response Status: ${response.status} ${response.statusText}`);
-    
-    // Attempt to log response body
-    const responseText = await response.text();
-    console.log('📝 Response Body:', responseText || '(empty body)');
+    const data = await res.json();
+    console.log(`\n📥 Server Status: ${res.status} ${res.statusText}`);
+    console.log(`📦 Response Data:`, data);
 
-    if (response.ok) {
-      console.log('\n✅ SUCCESS: The post payload was accepted!');
+    if (res.ok) {
+        console.log("✅ AGENT SUCCESS: The post was accepted and is in the Admin Queue!");
     } else {
-      console.error('\n❌ FAILED: The server rejected the request.');
+        console.log("❌ AGENT FAILED: The payload was rejected.");
     }
-  } catch (error) {
-    console.error('\n💥 NETWORKING ERROR:', error);
-    console.error('Make sure your Next.js local server is running on http://localhost:3000');
+  } catch (err) {
+    console.error("Network Error:", err);
   }
 }
 
-sendToAgentIngest();
+sendTest();

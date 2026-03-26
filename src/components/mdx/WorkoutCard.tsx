@@ -1,12 +1,33 @@
 import React from 'react';
 
-export function WorkoutCard({ title, exercises, duration, difficulty }: any) {
-  // Support both object arrays and simple string arrays from different agent payloads
-  const normalizedExercises = exercises?.map((ex: any) => {
+interface Exercise {
+  name: string;
+  sets: string;
+  reps: string;
+  rpe: string;
+  rest: string;
+}
+
+interface WorkoutCardProps {
+  title: string;
+  exercises: (string | Partial<Exercise>)[];
+  duration?: string;
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+}
+
+export function WorkoutCard({ title, exercises = [], duration, difficulty }: WorkoutCardProps) {
+  // Normalize exercises to handle both strict objects (Agent) and simple strings (Manual Edit)
+  const normalizedExercises: Exercise[] = exercises.map(ex => {
     if (typeof ex === 'string') {
       return { name: ex, sets: '-', reps: '-', rpe: '-', rest: '-' };
     }
-    return ex;
+    return {
+      name: ex.name || 'Unnamed Drill',
+      sets: ex.sets || '-',
+      reps: ex.reps || '-',
+      rpe: ex.rpe || '-',
+      rest: ex.rest || '-'
+    };
   });
 
   return (
@@ -38,7 +59,7 @@ export function WorkoutCard({ title, exercises, duration, difficulty }: any) {
             </tr>
           </thead>
           <tbody className="divide-y divide-white/[0.02]">
-            {normalizedExercises?.map((ex: any, i: number) => (
+            {normalizedExercises.map((ex, i) => (
               <tr key={i} className="hover:bg-white/[0.02] transition-colors even:bg-white/[0.01]">
                 <td className="px-6 md:px-8 py-5 font-bold text-zinc-100 uppercase tracking-wide text-sm">{ex.name}</td>
                 <td className="px-6 py-5 font-mono text-zinc-400 font-medium text-sm">{ex.sets}</td>
@@ -47,13 +68,6 @@ export function WorkoutCard({ title, exercises, duration, difficulty }: any) {
                 <td className="px-6 py-5 font-mono text-zinc-500 text-sm">{ex.rest}</td>
               </tr>
             ))}
-            {(!normalizedExercises || normalizedExercises.length === 0) && (
-              <tr>
-                <td colSpan={5} className="px-6 md:px-8 py-10 text-center text-zinc-500 font-bold uppercase tracking-widest text-xs">
-                  No drills defined for this block.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>

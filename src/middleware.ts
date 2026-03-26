@@ -85,9 +85,9 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     }
 
     // 2b. HMAC Signature Verification
-    const agentSecret = process.env.AGENT_SHARED_SECRET;
+    const agentSecret = process.env.AGENT_SECRET_KEY;
     if (!agentSecret) {
-      console.error('SERVER ERROR: AGENT_SHARED_SECRET missing');
+      console.error('SERVER ERROR: AGENT_SECRET_KEY missing');
       return new NextResponse('Internal Server Error', { status: 500 });
     }
 
