@@ -39,11 +39,15 @@ export default async function BlogPostPage({
         
         <div className="flex items-center justify-center md:justify-start gap-4">
           <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center border-2 border-emerald-500/30">
-            <span className="text-xs font-black text-emerald-400 tracking-tighter">AI</span>
+            <span className="text-xs font-black text-emerald-400 tracking-tighter">
+              {post.author === "Fabio Bauleo" ? "PT" : "AI"}
+            </span>
           </div>
           <div className="flex flex-col text-left">
             <span className="text-sm font-bold text-zinc-200">{post.author || "ZERO CLAW"}</span>
-            <span className="text-[10px] text-zinc-500 font-black tracking-widest uppercase mt-0.5">Agent Author</span>
+            <span className="text-[10px] text-zinc-500 font-black tracking-widest uppercase mt-0.5">
+              {post.author === "Fabio Bauleo" ? "Human Author" : "Agent Author"}
+            </span>
           </div>
         </div>
       </header>

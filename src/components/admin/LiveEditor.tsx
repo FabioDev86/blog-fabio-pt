@@ -9,6 +9,7 @@ interface LiveEditorProps {
   post: {
     slug: string;
     title: string;
+    excerpt: string;
     mdxContent: string;
     status: string;
   };
@@ -17,6 +18,7 @@ interface LiveEditorProps {
 export function LiveEditor({ post }: LiveEditorProps) {
   const router = useRouter();
   const [title, setTitle] = useState(post.title);
+  const [excerpt, setExcerpt] = useState(post.excerpt || '');
   const [content, setContent] = useState(post.mdxContent);
   const [isPending, startTransition] = useTransition();
   const [isSaving, setIsSaving] = useState(false);
@@ -46,6 +48,7 @@ export function LiveEditor({ post }: LiveEditorProps) {
     try {
       await updatePost(post.slug, {
         title,
+        excerpt,
         mdxContent: content,
         status: publish ? 'published' : 'pending_review'
       });
@@ -99,6 +102,18 @@ export function LiveEditor({ post }: LiveEditorProps) {
       <div className="flex-1 flex overflow-hidden">
         {/* Editor (Left) */}
         <div className="w-1/2 flex flex-col border-r border-zinc-900 bg-[#0a0a0a]">
+          <div className="px-4 py-2 bg-zinc-900/40 border-b border-zinc-800/50 text-[10px] uppercase tracking-widest font-black text-zinc-500">
+            Metadata & Summary
+          </div>
+          <div className="p-4 space-y-4 border-b border-zinc-900 bg-black/20">
+            <textarea
+              value={excerpt}
+              onChange={(e) => setExcerpt(e.target.value)}
+              rows={2}
+              placeholder="Post Summary / Excerpt..."
+              className="w-full bg-zinc-900/30 border border-zinc-800 rounded-lg px-4 py-3 text-xs font-medium text-zinc-400 focus:outline-none focus:border-emerald-500/30 transition-colors resize-none"
+            />
+          </div>
           <div className="px-4 py-2 bg-zinc-900/40 border-b border-zinc-800/50 text-[10px] uppercase tracking-widest font-black text-zinc-500">
             Raw MDX Editor
           </div>

@@ -15,8 +15,8 @@ export default async function HomePage() {
     publishedPosts = posts
       .filter((post: any) => post && post.status === 'published')
       .sort((a: any, b: any) => {
-        const dateA = new Date(a.metadata?.generatedAt || 0).getTime();
-        const dateB = new Date(b.metadata?.generatedAt || 0).getTime();
+        const dateA = new Date(a.metadata?.generatedAt || a.createdAt || 0).getTime();
+        const dateB = new Date(b.metadata?.generatedAt || b.createdAt || 0).getTime();
         return dateB - dateA;
       });
   }
@@ -73,16 +73,20 @@ export default async function HomePage() {
 
               <div className="flex items-center gap-4 pt-8 border-t border-white/[0.05] mt-10">
                 <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center border-2 border-emerald-500/30 shadow-inner flex-shrink-0">
-                  <span className="text-xs font-black text-emerald-400 tracking-tighter uppercase">AI</span>
+                  <span className="text-xs font-black text-emerald-400 tracking-tighter uppercase">
+                    {post.author === "Fabio Bauleo" ? "PT" : "AI"}
+                  </span>
                 </div>
                 <div className="flex flex-col flex-grow">
                   <span className="text-sm font-black text-white uppercase tracking-wide">{post.author || "ZERO CLAW"}</span>
-                  <span className="text-[10px] text-emerald-500 font-bold tracking-widest uppercase mt-0.5">Agent Author</span>
+                  <span className="text-[10px] text-emerald-500 font-bold tracking-widest uppercase mt-0.5">
+                    {post.author === "Fabio Bauleo" ? "Human Author" : "Agent Author"}
+                  </span>
                 </div>
-                {post.metadata?.generatedAt && (
+                {(post.metadata?.generatedAt || post.createdAt) && (
                   <div className="text-right flex-shrink-0">
                     <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 block">
-                      {new Date(post.metadata.generatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      {new Date(post.metadata?.generatedAt || post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                   </div>
                 )}

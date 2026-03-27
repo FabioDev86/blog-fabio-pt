@@ -68,7 +68,7 @@ export async function syncPreviewContent(slug: string, mdxContent: string) {
   return { success: true };
 }
 
-export async function updatePost(slug: string, newData: { title: string, mdxContent: string, status?: 'pending_review' | 'published' }) {
+export async function updatePost(slug: string, newData: { title: string, excerpt?: string, mdxContent: string, status?: 'pending_review' | 'published' }) {
   // 1. Authenticate & Authorize
   const session = await auth();
   if (!session.userId || session.sessionClaims?.metadata?.role !== 'admin') {
@@ -84,6 +84,7 @@ export async function updatePost(slug: string, newData: { title: string, mdxCont
 
   // Overwrite the specific mutated fields while retaining everything else (tags, author, etc)
   post.title = newData.title;
+  if (newData.excerpt !== undefined) post.excerpt = newData.excerpt;
   post.mdxContent = newData.mdxContent;
   if (newData.status) {
     post.status = newData.status;
@@ -97,4 +98,44 @@ export async function updatePost(slug: string, newData: { title: string, mdxCont
   revalidatePath('/admin/queue');
   
   return { success: true, slug };
+}
+
+export async function createPost(data: { title: string, slug: string, excerpt?: string, mdxContent: string, status?: 'pending_review' | 'published', tags?: string[], author?: string }) {
+  // 1. Authenticate & Authorize
+  const session = await auth();
+  if (!session.userId || session.sessionClaims?.metadata?.role !== 'admin') {
+    throw new Error('Unauthorized: Admin access required');
+  }
+
+  const postKey = `post:${data.slug}`;
+  const existingPost = await kv.get<any>(postKey);
+  if (existingPost) {
+    throw new Error('Post with this slug already exists. Use edit instead.');
+  }
+
+  const post = {
+    title: data.title,
+    slug: data.slug,
+    excerpt: data.excerpt || '',
+    mdxContent: data.mdxContent,
+    status: data.status || 'pending_review',
+    tags: data.tags || ['Journal'],
+    author: data.author || 'Fabio Bauleo',
+    metadata: {
+      generatedAt: new Date().toISOString()
+    },
+    createdAt: new Date().toISOString()
+  };
+
+  // Set the post in KV and add to index
+  await Promise.all([
+    kv.set(postKey, post),
+    kv.sadd('posts:index', data.slug)
+  ]);
+
+  // Revalidate edge cache and admin route
+  revalidateTag('blog', 'max');
+  revalidatePath('/admin/queue');
+
+  return { success: true, slug: data.slug };
 }

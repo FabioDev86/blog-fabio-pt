@@ -35,11 +35,21 @@ export default async function AdminQueuePage() {
         
         {/* PENDING SECTION */}
         <section>
-          <header className="mb-10 border-b border-zinc-900 pb-6">
-            <h1 className="text-4xl font-black uppercase tracking-tighter text-white">
-              Review <span className="text-amber-500">Queue</span>
-            </h1>
-            <p className="text-zinc-500 mt-2 font-medium">Agentic submissions awaiting your manual approval.</p>
+          <header className="mb-10 border-b border-zinc-900 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <h1 className="text-4xl font-black uppercase tracking-tighter text-white">
+                Review <span className="text-amber-500">Queue</span>
+              </h1>
+              <p className="text-zinc-500 mt-2 font-medium">Agentic submissions awaiting your manual approval.</p>
+            </div>
+            
+            <a 
+              href="/admin/new"
+              className="px-8 py-3 bg-white text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-emerald-400 hover:text-black transition-all active:scale-95 shadow-lg shadow-white/5 flex items-center gap-2 group"
+            >
+              <span className="text-emerald-600 font-bold group-hover:text-black">＋</span>
+              Create New Post
+            </a>
           </header>
 
           {pendingPosts.length === 0 ? (
